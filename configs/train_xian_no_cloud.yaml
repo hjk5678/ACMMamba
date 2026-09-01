@@ -1,0 +1,63 @@
+seed: 42
+log_dir: /data/BUAS/HJK/ACMMamba/logs/xian_no_cloud
+checkpoint_dir: /data/BUAS/HJK/ACMMamba/checkpoints/xian_no_cloud
+checkpoint_prefix: xian_no_cloud
+class_names: [farmland, greenery, road, building, water]
+
+data:
+  rgb_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/xian/no_cloud/GF2
+  sar_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/xian/no_cloud/GF3
+  label_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/xian/no_cloud/label
+  split_dir: /data/BUAS/HJK/ACMMamba/data/splits_xian_no_cloud
+  rgb_mean: [0.26057045653669864, 0.2629713665177956, 0.24496335507606787]
+  rgb_std: [0.1333328138944773, 0.12643106656860761, 0.11894785644080705]
+  sar_mean: [0.32424835792943035]
+  sar_std: [0.19007833379654146]
+  batch_size: 1
+  val_batch_size: 1
+  num_workers: 8
+  prefetch_factor: 2
+
+model:
+  in_channels_a: 3
+  in_channels_b: 1
+  num_classes: 5
+  dims: [96, 192, 384, 768]
+  depths: [1, 1, 1, 1]
+  d_state: 16
+  as6_expand: 1.0
+  history_offsets: [1, 4, 16, 64]
+  mlp_ratio: 4.0
+  dropout: 0.0
+  decoder_dropout: 0.1
+  decoder_blocks_per_stage: 3
+  drop_path_rate: 0.2
+  scan_backend: null
+
+loss:
+  num_classes: 5
+  ignore_index: 255
+  use_dataset_class_weights: true
+  class_frequencies: [0.3194000292, 0.0719023304, 0.3749238385, 0.1969828098, 0.0367909920]
+  class_weight_power: 0.5
+  ce_coefficient: 1.0
+  dice_coefficient: 1.0
+  label_smoothing: 0.0
+
+optimizer:
+  learning_rate: 0.00006
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+  eps: 0.00000001
+
+train:
+  epochs: 100
+  accumulation_steps: 4
+  amp: true
+  max_grad_norm: 1.0
+  warmup_epochs: 5
+  poly_power: 0.9
+  val_interval: 10
+  log_interval: 20
+  cudnn_benchmark: true
+  resume: null
