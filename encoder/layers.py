@@ -6,6 +6,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from common_layers import DropPath
+
 
 class LayerNorm2d(nn.Module):
     """Apply LayerNorm over channels independently at every spatial position."""
@@ -20,24 +22,6 @@ class LayerNorm2d(nn.Module):
         x = x.permute(0, 2, 3, 1)
         x = F.layer_norm(x, (x.shape[-1],), self.weight, self.bias, self.eps)
         return x.permute(0, 3, 1, 2).contiguous()
-
-
-class DropPath(nn.Module):
-    """Per-sample stochastic depth."""
-
-    def __init__(self, probability: float = 0.0) -> None:
-        super().__init__()
-        if not 0.0 <= probability < 1.0:
-            raise ValueError("Drop-path probability must be in [0, 1).")
-        self.probability = probability
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        if self.probability == 0.0 or not self.training:
-            return x
-        keep_probability = 1.0 - self.probability
-        shape = (x.shape[0],) + (1,) * (x.ndim - 1)
-        mask = x.new_empty(shape).bernoulli_(keep_probability)
-        return x * mask / keep_probability
 
 
 class ConvFFN(nn.Module):

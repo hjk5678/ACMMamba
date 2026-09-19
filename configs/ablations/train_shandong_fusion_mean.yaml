@@ -1,0 +1,92 @@
+seed: 42
+log_dir: /data/BUAS/HJK/ACMMamba/logs/ablations/shandong/mean
+checkpoint_dir: /data/BUAS/HJK/ACMMamba/checkpoints/ablations/shandong/mean
+class_names:
+- farmland
+- greenery
+- road
+- building
+- water
+data:
+  rgb_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/shandong/GF2
+  sar_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/shandong/GF3
+  label_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/shandong/label
+  split_dir: /data/BUAS/HJK/ACMMamba/data/splits
+  rgb_mean:
+  - 0.22786175604401648
+  - 0.23903183493110483
+  - 0.2416281091275199
+  rgb_std:
+  - 0.14607820531457671
+  - 0.13077874406935705
+  - 0.13096457260040756
+  sar_mean:
+  - 0.2589521446425652
+  sar_std:
+  - 0.20572006698576253
+  batch_size: 1
+  val_batch_size: 1
+  num_workers: 8
+  prefetch_factor: 2
+model:
+  in_channels_a: 3
+  in_channels_b: 1
+  num_classes: 5
+  dims:
+  - 96
+  - 192
+  - 384
+  - 768
+  depths:
+  - 1
+  - 1
+  - 1
+  - 1
+  d_state: 16
+  as6_expand: 1.0
+  history_offsets:
+  - 1
+  - 4
+  - 16
+  - 64
+  mlp_ratio: 4.0
+  dropout: 0.0
+  decoder_dropout: 0.1
+  decoder_blocks_per_stage: 3
+  decoder_type: unet
+  drop_path_rate: 0.2
+  scan_backend: null
+  fusion_mode: mean
+loss:
+  num_classes: 5
+  ignore_index: 255
+  use_dataset_class_weights: true
+  class_frequencies:
+  - 0.2169974384
+  - 0.2045685843
+  - 0.0863595045
+  - 0.3627266184
+  - 0.1293478544
+  class_weight_power: 0.5
+  ce_coefficient: 1.0
+  dice_coefficient: 1.0
+  label_smoothing: 0.0
+optimizer:
+  learning_rate: 6.0e-05
+  weight_decay: 0.01
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+train:
+  epochs: 100
+  accumulation_steps: 4
+  amp: true
+  max_grad_norm: 1.0
+  warmup_epochs: 5
+  poly_power: 0.9
+  val_interval: 10
+  log_interval: 20
+  cudnn_benchmark: true
+  resume: null
+checkpoint_prefix: shandong_fusion_mean

@@ -1,5 +1,19 @@
 # Dual-Modal Mamba U-Net
 
+## Decoder options (2026-09-13)
+
+The original baseline is SCSC + AS6 + MLFM with the four-stage U-Net
+decoder, using three ResNet basic blocks per stage (`decoder_type: unet`,
+`decoder_blocks_per_stage: 3`). The optional `decoder_type: rhdb` replaces the
+deepest two stages with parallel residual/hypergraph blocks; see `docs/RHDB.md`.
+Encoder modes, stacking and exchange frequency are controlled by each experiment's
+configuration. The diagram below describes the original baseline.
+
+![Current architecture with AS6](docs/figures/acmmamba_as6_resnet_architecture.png)
+
+[Editable SVG](docs/figures/acmmamba_as6_resnet_architecture.svg).
+Regenerate with `python tools/draw_as6_architecture.py`.
+
 ## Inputs
 
 - Modality A: RGB, shape `[B, 3, H, W]`

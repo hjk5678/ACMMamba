@@ -31,6 +31,7 @@ model:
   dropout: 0.0
   decoder_dropout: 0.1
   decoder_blocks_per_stage: 3
+  decoder_type: unet
   drop_path_rate: 0.2
   scan_backend: null
 

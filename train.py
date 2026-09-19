@@ -40,6 +40,7 @@ from utils import (
     seed_everything,
     seed_worker,
 )
+from utils.numerics import SafeOptimizerStep, require_finite, finite_named, raise_if_bad
 
 
 LOGGER = logging.getLogger("ACMMamba.train")
@@ -215,9 +216,11 @@ def train_one_epoch(
     log_interval: int,
     writer: SummaryWriter | None,
     max_batches: int | None = None,
+    step_guard: SafeOptimizerStep | None = None,
 ) -> Dict[str, float]:
     model.train()
     optimizer.zero_grad(set_to_none=True)
+    step_guard = step_guard or SafeOptimizerStep()
     loss_sums = {"loss": 0.0, "cross_entropy": 0.0, "dice": 0.0}
     sample_count = 0
     effective_batches = len(loader) if max_batches is None else min(len(loader), max_batches)
@@ -245,6 +248,9 @@ def train_one_epoch(
             modality_a = batch["rgb"].to(device, non_blocking=True)
             modality_b = batch["sar"].to(device, non_blocking=True)
             target = batch["label"].to(device, non_blocking=True)
+            context = f"train epoch={epoch+1} step={step+1} ids={batch.get('id', '?')}"
+            step_guard.check_scale(scaler, device, context)
+            require_finite([("input_A", modality_a), ("input_B", modality_b)], context, device, synchronize=True)
 
             synchronization_context = contextlib.nullcontext()
             if isinstance(model, DistributedDataParallel) and not should_update:
@@ -257,30 +263,20 @@ def train_one_epoch(
                     enabled=amp_enabled,
                 ):
                     logits = model(modality_a, modality_b)
+                    require_finite([("logits", logits)], context, device, synchronize=True)
                     components = criterion(logits, target, return_components=True)
                     backward_loss = components["loss"] / loss_divisor
+                require_finite(components.items(), context, device, synchronize=True)
                 scaler.scale(backward_loss).backward()
 
             if should_update:
-                scaler.unscale_(optimizer)
-                if max_grad_norm > 0:
-                    torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
-                scale_before_update = scaler.get_scale()
-                scaler.step(optimizer)
-                scaler.update()
-                scale_after_update = scaler.get_scale()
-                optimizer_updated = (
-                    not scaler.is_enabled()
-                    or scale_after_update >= scale_before_update
-                )
-                optimizer.zero_grad(set_to_none=True)
-                if optimizer_updated:
-                    scheduler.step()
-                elif is_main_process():
+                optimizer_updated, scale_before_update, scale_after_update = step_guard.step(
+                    model, optimizer, scheduler, scaler, max_grad_norm, device, context)
+                if not optimizer_updated and is_main_process():
                     LOGGER.warning(
                         "AMP skipped optimizer update at epoch=%d step=%d "
                         "because non-finite gradients were detected; "
-                        "the LR scheduler was not advanced (scale %.0f -> %.0f)",
+                        "the LR scheduler was not advanced (scale %.9g -> %.9g)",
                         epoch + 1,
                         step + 1,
                         scale_before_update,
@@ -353,6 +349,7 @@ def validate(
     max_batches: int | None = None,
 ) -> Dict[str, object]:
     model.eval()
+    validation_error = ""
     confusion = SegmentationConfusionMatrix(num_classes, ignore_index, device)
     loss_sums = {"loss": 0.0, "cross_entropy": 0.0, "dice": 0.0}
     sample_count = 0
@@ -374,13 +371,27 @@ def validate(
             modality_a = batch["rgb"].to(device, non_blocking=True)
             modality_b = batch["sar"].to(device, non_blocking=True)
             target = batch["label"].to(device, non_blocking=True)
+            context = f"validation epoch={epoch+1} step={step+1} ids={batch.get('id', '?')}"
+            bad = finite_named([("input_A", modality_a), ("input_B", modality_b)], device)
+            if bad:
+                validation_error = validation_error or f"{context}: non-finite {bad}"
+                continue
             with torch.autocast(
                 device_type=device.type,
                 dtype=torch.float16,
                 enabled=amp_enabled,
             ):
                 logits = model(modality_a, modality_b)
+                bad = finite_named([("logits", logits)], device)
+                if bad:
+                    validation_error = validation_error or f"{context}: non-finite {bad}"
+                    continue
                 components = criterion(logits, target, return_components=True)
+
+            bad = finite_named(components.items(), device)
+            if bad:
+                validation_error = validation_error or f"{context}: non-finite {bad}"
+                continue
 
             batch_size = target.shape[0]
             sample_count += batch_size
@@ -393,6 +404,9 @@ def validate(
     finally:
         progress.close()
 
+    # Eval shards have unequal lengths: NEVER all-reduce per validation batch.
+    # Reject the entire validation before publishing metrics or saving weights.
+    raise_if_bad(validation_error, device)
     confusion.synchronize()
     averages = reduce_loss_sums(loss_sums, sample_count, device)
     metric_tensors = confusion.compute()
@@ -489,7 +503,13 @@ def main() -> None:
             power=float(train_config.get("poly_power", 0.9)),
         )
         amp_enabled = bool(train_config.get("amp", True))
-        scaler = torch.amp.GradScaler("cuda", enabled=amp_enabled)
+        init_scale = float(train_config.get("amp_init_scale", 65536.0))
+        if not math.isfinite(init_scale) or init_scale <= 0:
+            raise ValueError("amp_init_scale must be finite and positive")
+        scaler = torch.amp.GradScaler("cuda", enabled=amp_enabled, init_scale=init_scale)
+        step_guard = SafeOptimizerStep(
+            min_scale=float(train_config.get("amp_min_scale", 2.0**-16)),
+            max_consecutive_skips=int(train_config.get("amp_max_consecutive_skips", 8)))
 
         resume_path = args.resume or train_config.get("resume")
         start_epoch = 0
@@ -501,6 +521,9 @@ def main() -> None:
                 resume_path, model, optimizer, scheduler, scaler
             )
             LOGGER.info("resumed from %s at epoch %d", resume_path, start_epoch + 1)
+
+        step_guard.check_scale(scaler, device, "initial/resumed scaler")
+        require_finite(model.state_dict().items(), "initial/resumed model", device, synchronize=True)
 
         if distributed:
             model = DistributedDataParallel(
@@ -515,7 +538,8 @@ def main() -> None:
         writer = SummaryWriter(log_dir / "tensorboard") if main_process else None
         parameter_count = sum(parameter.numel() for parameter in model.parameters())
         LOGGER.info(
-            "device=%s world_size=%d parameters=%s train=%d val=%d batch_per_gpu=%d accum=%d",
+            "device=%s world_size=%d parameters=%s train=%d val=%d "
+            "batch_per_gpu=%d accum=%d fusion=%s stage_modes=%s decoder=%s cross_mode=%s depths=%s cross_frequency=%s",
             device,
             world_size,
             f"{parameter_count:,}",
@@ -523,7 +547,30 @@ def main() -> None:
             len(val_loader.dataset),
             int(config["data"]["batch_size"]),
             accumulation_steps,
+            str(config["model"].get("fusion_mode", "mlfm")),
+            "-".join(
+                str(mode)
+                for mode in config["model"].get(
+                    "stage_modes", ("self", "cross", "self", "cross")
+                )
+            ),
+            str(config["model"].get("decoder_type", "unet")),
+            str(config["model"].get("cross_mode", "hard")),
+            tuple(config["model"].get("depths", (1, 1, 1, 1))),
+            str(config["model"].get("cross_frequency", "every_block")),
         )
+        if main_process:
+            raw_model = model.module if distributed else model
+            LOGGER.info("numerical guards enabled: scaler=%.9g min_scale=%.9g max_consecutive_skips=%d; non-finite forward/validation aborts",
+                        scaler.get_scale(), step_guard.min_scale, step_guard.max_consecutive_skips)
+            LOGGER.info("encoder block routing: %s", [stage.block_modes for stage in raw_model.encoder.stages])
+            if raw_model.encoder.fusion_mode == "mlfm_hg":
+                LOGGER.info("MLFM pre-fusion HG: independent A/B, one HGConv each, stages=1,2,3,4 options=%s", config["model"].get("mlfm_hg_options", {}))
+            if raw_model.decoder.decoder_type == "rhdb":
+                LOGGER.info("RHDB stages (deep first)=%s options=%s", raw_model.decoder.hypergraph_stages, config["model"].get("rhdb_options", {}))
+            if raw_model.decoder.mscan_stages:
+                LOGGER.info("MSCAN stages (deep first)=%s options=%s", raw_model.decoder.mscan_stages, config["model"].get("mscan_options", {}))
+            LOGGER.info("decoder upsampling=%s options=%s (segmentation-head resize unchanged)", raw_model.decoder.upsample_mode, config["model"].get("sapa_options", {}))
 
         epochs = int(train_config["epochs"])
         for epoch in range(start_epoch, epochs):
@@ -545,6 +592,7 @@ def main() -> None:
                 log_interval=int(train_config.get("log_interval", 20)),
                 writer=writer,
                 max_batches=1 if args.smoke_test else None,
+                step_guard=step_guard,
             )
 
             should_validate = (
@@ -578,6 +626,35 @@ def main() -> None:
                     f"{val_result['OA']:.4f}" if val_result else "-",
                 )
                 record = {"epoch": epoch + 1, "train": train_result, "val": val_result}
+                unwrapped_model = model.module if distributed else model
+                cross_weights = unwrapped_model.encoder.soft_cross_weights()
+                if cross_weights:
+                    record["soft_cross_weights"] = cross_weights
+                    for block_name, values in cross_weights.items():
+                        LOGGER.info(
+                            "soft_cross epoch=%d %s A3=%.6f A4=%.6f B3=%.6f B4=%.6f",
+                            epoch + 1, block_name, *values,
+                        )
+                        if writer is not None:
+                            for direction, value in zip(("A3", "A4", "B3", "B4"), values):
+                                writer.add_scalar(
+                                    f"soft_cross/{block_name}/{direction}", value, epoch + 1
+                                )
+                fusion_gammas = unwrapped_model.encoder.hypergraph_fusion_weights()
+                if fusion_gammas:
+                    record["mlfm_hg_gammas"] = fusion_gammas
+                    for stage_name, values in fusion_gammas.items():
+                        LOGGER.info("mlfm_hg epoch=%d %s gamma_A=%.8f gamma_B=%.8f", epoch + 1, stage_name, *values)
+                        if writer is not None:
+                            for modality, value in zip(("A", "B"), values):
+                                writer.add_scalar(f"mlfm_hg/{stage_name}/gamma_{modality}", value, epoch + 1)
+                hg_gammas = unwrapped_model.decoder.hypergraph_gammas()
+                if hg_gammas:
+                    record["hypergraph_gammas"] = hg_gammas
+                    for stage_name, gamma in hg_gammas.items():
+                        LOGGER.info("rhdb epoch=%d %s gamma=%.6f", epoch + 1, stage_name, gamma)
+                        if writer is not None:
+                            writer.add_scalar(f"rhdb/{stage_name}/gamma", gamma, epoch + 1)
                 append_jsonl(log_dir / "history.jsonl", record)
                 if writer is not None:
                     for key, value in train_result.items():
@@ -649,6 +726,9 @@ def main() -> None:
 
         if writer is not None:
             writer.close()
+    except FloatingPointError:
+        LOGGER.exception("Numerical failure: aborting; existing best/last checkpoints were not overwritten by this epoch.")
+        raise
     finally:
         cleanup_distributed()
 

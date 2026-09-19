@@ -15,6 +15,7 @@ import torch.distributed as dist
 import torch.nn as nn
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LambdaLR
+from .numerics import require_finite, optimizer_tensors
 
 
 def initialize_distributed() -> Tuple[bool, int, int, int, torch.device]:
@@ -128,6 +129,11 @@ def save_checkpoint(
     best_miou: float,
     config: Mapping[str, object],
 ) -> None:
+    device = next(model.parameters()).device
+    require_finite(unwrap_model(model).state_dict().items(), "refusing invalid checkpoint model", device)
+    require_finite(optimizer_tensors(optimizer), "refusing invalid checkpoint optimizer", device)
+    if not math.isfinite(scaler.get_scale()) or scaler.get_scale() <= 0:
+        raise FloatingPointError("Refusing checkpoint with invalid AMP scale")
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = path.with_suffix(path.suffix + ".tmp")
@@ -153,6 +159,10 @@ def save_model_weights(
     metrics: Mapping[str, object],
     config: Mapping[str, object],
 ) -> None:
+    require_finite(unwrap_model(model).state_dict().items(), "refusing invalid best weights", next(model.parameters()).device)
+    for key in ("loss", "cross_entropy", "dice", "mIoU", "mF1", "OA"):
+        if key in metrics and not math.isfinite(float(metrics[key])):
+            raise FloatingPointError(f"Refusing best weights with non-finite {key}")
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = path.with_suffix(path.suffix + ".tmp")
@@ -176,13 +186,17 @@ def load_checkpoint(
     scaler: torch.amp.GradScaler | None = None,
 ) -> Tuple[int, float]:
     checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+    require_finite(checkpoint["model"].items(), "invalid resume checkpoint", torch.device("cpu"))
     model.load_state_dict(checkpoint["model"], strict=True)
     if optimizer is not None and "optimizer" in checkpoint:
         optimizer.load_state_dict(checkpoint["optimizer"])
+        require_finite(optimizer_tensors(optimizer), "invalid resumed optimizer", next(model.parameters()).device)
     if scheduler is not None and "scheduler" in checkpoint:
         scheduler.load_state_dict(checkpoint["scheduler"])
     if scaler is not None and "scaler" in checkpoint:
         scaler.load_state_dict(checkpoint["scaler"])
+        if not math.isfinite(scaler.get_scale()) or scaler.get_scale() <= 0:
+            raise FloatingPointError("Invalid resumed AMP scale")
     return int(checkpoint.get("epoch", -1)) + 1, float(checkpoint.get("best_miou", 0.0))
 
 

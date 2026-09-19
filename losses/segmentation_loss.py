@@ -171,7 +171,7 @@ class CombinedSegmentationLoss(nn.Module):
     ) -> torch.Tensor | Dict[str, torch.Tensor]:
         valid_mask = target != self.ignore_index
         if not torch.any(valid_mask):
-            zero = logits.sum() * 0.0
+            zero = logits.float().sum() * 0.0
             if return_components:
                 return {"loss": zero, "cross_entropy": zero, "dice": zero}
             return zero

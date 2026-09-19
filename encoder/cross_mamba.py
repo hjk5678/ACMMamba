@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Literal, Sequence, Tuple
+import math
 
 import torch
 import torch.nn as nn
@@ -79,11 +80,24 @@ class DualScanMambaBlock(nn.Module):
         dropout: float = 0.0,
         drop_path: float = 0.0,
         scan_backend: str | None = None,
+        cross_mode: str = "hard",
+        soft_cross_init: float = 0.5,
     ) -> None:
         super().__init__()
         if mode not in {"self", "cross"}:
             raise ValueError(f"Unsupported scan mode: {mode}")
         self.mode = mode
+        if cross_mode not in {"hard", "soft"}:
+            raise ValueError("cross_mode must be 'hard' or 'soft'.")
+        if not 0.0 < soft_cross_init < 1.0:
+            raise ValueError("soft_cross_init must lie strictly between 0 and 1.")
+        self.cross_mode = cross_mode
+        if mode == "cross" and cross_mode == "soft":
+            # Independent destination-branch / direction coefficients. Keeping
+            # these 1-D also excludes them from the optimizer's weight decay.
+            initial_logit = math.log(soft_cross_init / (1.0 - soft_cross_init))
+            self.cross_logits_a = nn.Parameter(torch.full((2,), initial_logit))
+            self.cross_logits_b = nn.Parameter(torch.full((2,), initial_logit))
 
         # Every modality owns all branch parameters, including normalization,
         # preprocessing, four AS6 paths, output projection and FFN.
@@ -133,6 +147,20 @@ class DualScanMambaBlock(nn.Module):
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         if self.mode == "self":
             return paths_a, paths_b
+
+        if paths_a.shape != paths_b.shape or paths_a.ndim != 4 or paths_a.shape[1] != 4:
+            raise ValueError("Cross routing requires matching [B,4,C,L] path tensors.")
+
+        if self.cross_mode == "soft":
+            alpha = self.cross_logits_a.sigmoid().to(paths_a.dtype).view(1, 2, 1, 1)
+            beta = self.cross_logits_b.sigmoid().to(paths_b.dtype).view(1, 2, 1, 1)
+            # Both destinations use the ORIGINAL paths, never an updated branch.
+            mixed_a = (1 - alpha) * paths_a[:, 2:] + alpha * paths_b[:, 2:]
+            mixed_b = (1 - beta) * paths_b[:, 2:] + beta * paths_a[:, 2:]
+            return (
+                torch.cat((paths_a[:, :2], mixed_a), dim=1),
+                torch.cat((paths_b[:, :2], mixed_b), dim=1),
+            )
 
         # CrossMamba: only reverse directions 3 and 4 are exchanged.
         routed_a = torch.cat((paths_a[:, :2], paths_b[:, 2:]), dim=1)
@@ -186,7 +214,7 @@ class DualScanMambaBlock(nn.Module):
 
 
 class DualScanStage(nn.Module):
-    """Stack blocks that all follow the interaction policy of one stage."""
+    """Stack AS6 blocks with cross routing at every block or only the first."""
 
     def __init__(
         self,
@@ -194,17 +222,29 @@ class DualScanStage(nn.Module):
         depth: int,
         mode: StageMode,
         drop_path_rates: Sequence[float],
+        cross_frequency: str = "every_block",
         **block_kwargs,
     ) -> None:
         super().__init__()
+        if mode not in {"self", "cross"}:
+            raise ValueError(f"Unsupported scan mode: {mode}")
+        if cross_frequency not in {"every_block", "once_per_stage"}:
+            raise ValueError("cross_frequency must be 'every_block' or 'once_per_stage'.")
+        if depth < 1:
+            raise ValueError("Stage depth must be positive.")
         if depth != len(drop_path_rates):
             raise ValueError("Each block requires one drop-path rate.")
         self.mode = mode
+        self.cross_frequency = cross_frequency
+        self.block_modes = tuple(
+            mode if cross_frequency == "every_block" or index == 0 else "self"
+            for index in range(depth)
+        )
         self.blocks = nn.ModuleList(
             [
                 DualScanMambaBlock(
                     channels=channels,
-                    mode=mode,
+                    mode=self.block_modes[index],
                     drop_path=drop_path_rates[index],
                     **block_kwargs,
                 )

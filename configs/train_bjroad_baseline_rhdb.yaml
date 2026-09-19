@@ -1,0 +1,116 @@
+# Baseline: CCCC soft-once + AS6 2242 + MLFM + two-stage RHDB, RGB/GPS, 150 epochs.
+seed: 42
+log_dir: /data/BUAS/HJK/ACMMamba/logs/baseline/bjroad
+checkpoint_dir: /data/BUAS/HJK/ACMMamba/checkpoints/baseline/bjroad
+checkpoint_prefix: bjroad_baseline_rhdb
+class_names: [background, road]
+
+visualization:
+  modality_a_name: RGB
+  modality_b_name: GPS
+  class_colors:
+    - [70, 70, 70]
+    - [255, 215, 0]
+  ignore_color: [255, 255, 255]
+
+data:
+  rgb_dir: /data/BUAS/HJK/ACMMamba/data/BJRoad/train_val/image
+  sar_dir: /data/BUAS/HJK/ACMMamba/data/BJRoad/train_val/gps
+  label_dir: /data/BUAS/HJK/ACMMamba/data/BJRoad/train_val/mask
+  test_rgb_dir: /data/BUAS/HJK/ACMMamba/data/BJRoad/test/image
+  test_sar_dir: /data/BUAS/HJK/ACMMamba/data/BJRoad/test/gps
+  test_label_dir: /data/BUAS/HJK/ACMMamba/data/BJRoad/test/mask
+  split_dir: /data/BUAS/HJK/ACMMamba/data/splits_bjroad
+  rgb_filename_template: "{id}_sat.png"
+  modality_b_filename_template: "{id}_gps.jpg"
+  label_filename_template: "{id}_mask.png"
+  label_threshold: 128
+  rgb_mean: [0.4128128771175386, 0.4291547808797538, 0.3462545244052689]
+  rgb_std: [0.19390657267962333, 0.16184002362402528, 0.1722988604966245]
+  sar_mean: [0.04599201811286]
+  sar_std: [0.12301452750753589]
+  modality_b_channels: 1
+  train_horizontal_flip_probability: 0.0
+  train_vertical_flip_probability: 0.0
+  train_random_90_rotation: false
+  batch_size: 1
+  val_batch_size: 1
+  num_workers: 8
+  prefetch_factor: 2
+
+model:
+  in_channels_a: 3
+  in_channels_b: 1
+  num_classes: 2
+  dims:
+  - 96
+  - 192
+  - 384
+  - 768
+  depths:
+  - 2
+  - 2
+  - 4
+  - 2
+  d_state: 16
+  as6_expand: 1.0
+  history_offsets:
+  - 1
+  - 4
+  - 16
+  - 64
+  mlp_ratio: 4.0
+  dropout: 0.0
+  decoder_dropout: 0.1
+  decoder_blocks_per_stage: 3
+  decoder_type: rhdb
+  rhdb_options:
+    hypergraph_stages: [1, 2]  # deepest two; shallow stages retain 3-block ResNet
+    use_hypergraph: true
+    fusion_mode: gate
+    k: 8
+    node_grid: 16
+    alpha: 0.7
+    hypergraph_hidden_dim: 64
+    gamma_init: 0.0
+    eps: 1.0e-6
+    num_residual_blocks: 1
+    dropout: 0.0
+  drop_path_rate: 0.2
+  scan_backend: null
+  cross_frequency: once_per_stage
+  cross_mode: soft
+  soft_cross_init: 0.5
+  fusion_mode: mlfm
+  stage_modes:
+  - cross
+  - cross
+  - cross
+  - cross
+loss:
+  num_classes: 2
+  ignore_index: 255
+  use_dataset_class_weights: true
+  class_frequencies: [0.8871288451, 0.1128711549]
+  class_weight_power: 0.5
+  ce_coefficient: 1.0
+  dice_coefficient: 1.0
+  label_smoothing: 0.0
+
+optimizer:
+  learning_rate: 0.00006
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+  eps: 0.00000001
+
+train:
+  epochs: 150
+  accumulation_steps: 4
+  amp: true
+  max_grad_norm: 1.0
+  warmup_epochs: 5
+  poly_power: 0.9
+  val_interval: 10
+  log_interval: 20
+  cudnn_benchmark: true
+  resume: null

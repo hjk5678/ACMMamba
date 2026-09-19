@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1368pt" height="986.4pt" viewBox="0 0 1368 986.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-09-15T16:38:17.727208</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.5.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 986.4 
+L 1368 986.4 
+L 1368 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 41.04 93.6 
+L 1326.96 93.6 
+Q 1335.6 93.6 1335.6 102.24 
+L 1335.6 261.36 
+Q 1335.6 270 1326.96 270 
+L 41.04 270 
+Q 32.4 270 32.4 261.36 
+L 32.4 102.24 
+Q 32.4 93.6 41.04 93.6 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #fcfdfe; stroke: #348995; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 41.04 291.6 
+L 1326.96 291.6 
+Q 1335.6 291.6 1335.6 300.24 
+L 1335.6 545.76 
+Q 1335.6 554.4 1326.96 554.4 
+L 41.04 554.4 
+Q 32.4 554.4 32.4 545.76 
+L 32.4 300.24 
+Q 32.4 291.6 41.04 291.6 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #fcfdfe; stroke: #c65f55; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 41.04 576 
+L 1326.96 576 
+Q 1335.6 576 1335.6 584.64 
+L 1335.6 826.56 
+Q 1335.6 835.2 1326.96 835.2 
+L 41.04 835.2 
+Q 32.4 835.2 32.4 826.56 
+L 32.4 584.64 
+Q 32.4 576 41.04 576 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #fcfdfe; stroke: #348995; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 547.2 139.68 
+L 547.2 128.16 
+L 1144.8 128.16 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #63758a; stroke-width: 1.5; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 192.796436 171.36 
+Q 210.599832 171.36 226.726178 171.36 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 221.526178 168.76 
+L 226.726178 171.36 
+L 221.526178 173.96 
+L 221.526178 168.76 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #348995; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 397.999512 171.36 
+Q 414.001573 171.36 428.326582 171.36 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 423.126582 168.76 
+L 428.326582 171.36 
+L 423.126582 173.96 
+L 423.126582 168.76 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #348995; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 664.396436 171.36 
+Q 682.199832 171.36 698.326178 171.36 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 693.126178 168.76 
+L 698.326178 171.36 
+L 693.126178 173.96 
+L 693.126178 168.76 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #348995; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 1144.8 130.159688 
+Q 1144.8 133.918073 1144.8 135.999407 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #63758a; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 1147.4 130.799407 
+L 1144.8 135.999407 
+L 1142.2 130.799407 
+L 1147.4 130.799407 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #63758a; stroke: #63758a; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 444.796436 385.92 
+Q 482.39689 385.92 518.320293 385.92 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #c65f55; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 513.120293 383.32 
+L 518.320293 385.92 
+L 513.120293 388.52 
+L 513.120293 383.32 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #c65f55; stroke: #c65f55; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 833.598743 385.92 
+Q 873.000699 385.92 910.725603 385.92 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #c65f55; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 905.525603 383.32 
+L 910.725603 385.92 
+L 905.525603 388.52 
+L 905.525603 383.32 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #c65f55; stroke: #c65f55; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 491.596436 668.88 
+Q 509.399832 668.88 525.526178 668.88 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 520.326178 666.28 
+L 525.526178 668.88 
+L 520.326178 671.48 
+L 520.326178 666.28 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #348995; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 718.398413 668.88 
+Q 747.000107 668.88 773.924751 668.88 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 768.724751 666.28 
+L 773.924751 668.88 
+L 768.724751 671.48 
+L 768.724751 666.28 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #348995; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 1038.799731 668.88 
+Q 1071.000863 668.88 1101.524943 668.88 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 1096.324943 666.28 
+L 1101.524943 668.88 
+L 1096.324943 671.48 
+L 1096.324943 666.28 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #348995; stroke: #348995; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 340.400391 918.72 
+Q 367.2008 918.72 392.324159 918.72 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #8570ac; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 387.124159 916.12 
+L 392.324159 918.72 
+L 387.124159 921.32 
+L 387.124159 916.12 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #8570ac; stroke: #8570ac; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 642.800391 918.72 
+Q 669.6008 918.72 694.724159 918.72 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #8570ac; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 689.524159 916.12 
+L 694.724159 918.72 
+L 689.524159 921.32 
+L 689.524159 916.12 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #8570ac; stroke: #8570ac; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 945.200391 918.72 
+Q 972.0008 918.72 997.124159 918.72 
+" clip-path="url(#pd6fbd3df16)" style="fill: none; stroke: #8570ac; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 991.924159 916.12 
+L 997.124159 918.72 
+L 991.924159 921.32 
+L 991.924159 916.12 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #8570ac; stroke: #8570ac; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 67.68 139.68 
+L 184.32 139.68 
+Q 190.8 139.68 190.8 146.16 
+L 190.8 196.56 
+Q 190.8 203.04 184.32 203.04 
+L 67.68 203.04 
+Q 61.2 203.04 61.2 196.56 
+L 61.2 146.16 
+Q 61.2 139.68 67.68 139.68 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 236.88 139.68 
+L 389.52 139.68 
+Q 396 139.68 396 146.16 
+L 396 196.56 
+Q 396 203.04 389.52 203.04 
+L 236.88 203.04 
+Q 230.4 203.04 230.4 196.56 
+L 230.4 146.16 
+Q 230.4 139.68 236.88 139.68 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 438.48 139.68 
+L 655.92 139.68 
+Q 662.4 139.68 662.4 146.16 
+L 662.4 196.56 
+Q 662.4 203.04 655.92 203.04 
+L 438.48 203.04 
+Q 432 203.04 432 196.56 
+L 432 146.16 
+Q 432 139.68 438.48 139.68 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 708.48 139.68 
+L 918.72 139.68 
+Q 925.2 139.68 925.2 146.16 
+L 925.2 196.56 
+Q 925.2 203.04 918.72 203.04 
+L 708.48 203.04 
+Q 702 203.04 702 196.56 
+L 702 146.16 
+Q 702 139.68 708.48 139.68 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 992.88 139.68 
+L 1296.72 139.68 
+Q 1303.2 139.68 1303.2 146.16 
+L 1303.2 196.56 
+Q 1303.2 203.04 1296.72 203.04 
+L 992.88 203.04 
+Q 986.4 203.04 986.4 196.56 
+L 986.4 146.16 
+Q 986.4 139.68 992.88 139.68 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #f6f8fb; stroke: #b1bdcb; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 67.68 340.92 
+L 436.32 340.92 
+Q 442.8 340.92 442.8 347.4 
+L 442.8 424.44 
+Q 442.8 430.92 436.32 430.92 
+L 67.68 430.92 
+Q 61.2 430.92 61.2 424.44 
+L 61.2 347.4 
+Q 61.2 340.92 67.68 340.92 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #fff0ee; stroke: #c65f55; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 528.48 340.92 
+L 825.12 340.92 
+Q 831.6 340.92 831.6 347.4 
+L 831.6 424.44 
+Q 831.6 430.92 825.12 430.92 
+L 528.48 430.92 
+Q 522 430.92 522 424.44 
+L 522 347.4 
+Q 522 340.92 528.48 340.92 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #fff0ee; stroke: #c65f55; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 920.88 340.92 
+L 1282.32 340.92 
+Q 1288.8 340.92 1288.8 347.4 
+L 1288.8 424.44 
+Q 1288.8 430.92 1282.32 430.92 
+L 920.88 430.92 
+Q 914.4 430.92 914.4 424.44 
+L 914.4 347.4 
+Q 914.4 340.92 920.88 340.92 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #fff0ee; stroke: #c65f55; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 71.28 619.92 
+L 483.12 619.92 
+Q 489.6 619.92 489.6 626.4 
+L 489.6 711.36 
+Q 489.6 717.84 483.12 717.84 
+L 71.28 717.84 
+Q 64.8 717.84 64.8 711.36 
+L 64.8 626.4 
+Q 64.8 619.92 71.28 619.92 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 535.68 619.92 
+L 709.92 619.92 
+Q 716.4 619.92 716.4 626.4 
+L 716.4 711.36 
+Q 716.4 717.84 709.92 717.84 
+L 535.68 717.84 
+Q 529.2 717.84 529.2 711.36 
+L 529.2 626.4 
+Q 529.2 619.92 535.68 619.92 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 784.08 619.92 
+L 1030.32 619.92 
+Q 1036.8 619.92 1036.8 626.4 
+L 1036.8 711.36 
+Q 1036.8 717.84 1030.32 717.84 
+L 784.08 717.84 
+Q 777.6 717.84 777.6 711.36 
+L 777.6 626.4 
+Q 777.6 619.92 784.08 619.92 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 1111.68 632.88 
+L 1285.92 632.88 
+Q 1292.4 632.88 1292.4 639.36 
+L 1292.4 698.4 
+Q 1292.4 704.88 1285.92 704.88 
+L 1111.68 704.88 
+Q 1105.2 704.88 1105.2 698.4 
+L 1105.2 639.36 
+Q 1105.2 632.88 1111.68 632.88 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5ed; stroke: #508960; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 100.08 891.72 
+L 331.92 891.72 
+Q 338.4 891.72 338.4 898.2 
+L 338.4 939.24 
+Q 338.4 945.72 331.92 945.72 
+L 100.08 945.72 
+Q 93.6 945.72 93.6 939.24 
+L 93.6 898.2 
+Q 93.6 891.72 100.08 891.72 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 402.48 891.72 
+L 634.32 891.72 
+Q 640.8 891.72 640.8 898.2 
+L 640.8 939.24 
+Q 640.8 945.72 634.32 945.72 
+L 402.48 945.72 
+Q 396 945.72 396 939.24 
+L 396 898.2 
+Q 396 891.72 402.48 891.72 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #eaf5f7; stroke: #348995; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 704.88 891.72 
+L 936.72 891.72 
+Q 943.2 891.72 943.2 898.2 
+L 943.2 939.24 
+Q 943.2 945.72 936.72 945.72 
+L 704.88 945.72 
+Q 698.4 945.72 698.4 939.24 
+L 698.4 898.2 
+Q 698.4 891.72 704.88 891.72 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #f1edfa; stroke: #8570ac; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 1007.28 891.72 
+L 1239.12 891.72 
+Q 1245.6 891.72 1245.6 898.2 
+L 1245.6 939.24 
+Q 1245.6 945.72 1239.12 945.72 
+L 1007.28 945.72 
+Q 1000.8 945.72 1000.8 939.24 
+L 1000.8 898.2 
+Q 1000.8 891.72 1007.28 891.72 
+z
+" clip-path="url(#pd6fbd3df16)" style="fill: #f1edfa; stroke: #8570ac; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #203047; font: 700 26px 'Microsoft YaHei'; text-anchor: start" x="46.8" y="41.657188" transform="rotate(-0, 46.8, 41.657188)">RHDB · Region Hypergraph Branch</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #63758a; font: 14px 'Microsoft YaHei'; text-anchor: start" x="46.8" y="70.314219" transform="rotate(-0, 46.8, 70.314219)">区域超图分支 / Region construction, sample-specific topology and feature propagation</text>
+   </g>
+   <g id="text_3">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'; text-anchor: start" x="45.36" y="113.435625" transform="rotate(-0, 45.36, 113.435625)">A   Region nodes and normalized center coordinates</text>
+   </g>
+   <g id="text_4">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(104.595 166.218563)">Input F</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(82.05 183.110813)">B × C × H × W</text>
+   </g>
+   <g id="text_5">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(284.11125 166.218563)">Conv 1×1</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(276.132187 183.110813)">C → Ch = 64</text>
+   </g>
+   <g id="text_6">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(469.365 166.160438)">Adaptive average pooling</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(455.952187 183.110813)">hg=min(H,16), wg=min(W,16)</text>
+   </g>
+   <g id="text_7">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(754.813125 166.218563)">Flatten + transpose</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(772.513125 183.110813)">X: B × N × Ch</text>
+   </g>
+   <g id="text_8">
+    <text style="fill: #203047; font: 12px 'Microsoft YaHei'" transform="translate(1063.245937 166.183875)">Region-center coordinates P</text>
+    <text style="fill: #203047; font: 12px 'Microsoft YaHei'" transform="translate(1064.138438 183.1455)">P: N × 2; normalized to [0,1]</text>
+   </g>
+   <g id="text_9">
+    <text style="fill: #63758a; font: 10px 'Microsoft YaHei'; text-anchor: middle" x="720" y="124.463594" transform="rotate(-0, 720, 124.463594)">derived from pooled grid</text>
+   </g>
+   <g id="text_10">
+    <text style="fill: #63758a; font: 12px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="238.780313" transform="rotate(-0, 61.2, 238.780313)">N = hg × wg ≤ 256. Nodes represent pooled regions, not individual pixels. X and P follow the same row-major order.</text>
+   </g>
+   <g id="text_11">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'; text-anchor: start" x="45.36" y="311.511563" transform="rotate(-0, 45.36, 311.511563)">B   KNN hypergraph construction (independently for each sample)</text>
+   </g>
+   <g id="text_12">
+    <text style="fill: #c65f55; font: 700 13px 'Microsoft YaHei'; text-anchor: middle" x="252" y="359.260078" transform="rotate(-0, 252, 359.260078)">Semantic–spatial distance</text>
+   </g>
+   <g id="text_13">
+    <!-- $d_{ij}=0.7(1-\cos(x_i,x_j))+0.3\Vert p_i-p_j\Vert_2$ -->
+    <g style="fill: #203047" transform="translate(114.9 390.09)">
+     <text>
+      <tspan style="font: oblique 15px 'DejaVu Sans'" x="0 121.809082 141.703857 215.380371 246.642334" y="-0.53125">dxxpp</tspan>
+      <tspan style="font: oblique 10.5px 'DejaVu Sans'" x="9.521484 12.438721 130.686035 150.580811 224.901855 256.163818" y="1.9296875">ijijij</tspan>
+      <tspan style="font: 15px 'DejaVu Sans'" x="18.688477 34.179199 43.722656 47.365723 56.90918 62.76123 75.227051 90.717773 98.964844 108.14209 115.957031 134.013428 153.908203 159.760254 168.534668 184.025391 193.568848 198.336914 207.880371 231.151611 259.491211" y="-0.53125">=0.7(1−cos(,))+0.3‖−‖</tspan>
+      <tspan style="font: 10.5px 'DejaVu Sans'" x="267.134766" y="1.9296875">2</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_14">
+    <text style="fill: #63758a; font: 11px 'Microsoft YaHei'; text-anchor: middle" x="252" y="419.97375" transform="rotate(-0, 252, 419.97375)">Inputs: X and P; self distance set to +∞</text>
+   </g>
+   <g id="text_15">
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(630.180781 371.168656)">KNN selection</text>
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(580.256719 389.468594)">K′ = min(8, N−1) other nodes</text>
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(596.854062 407.768531)">Add the center explicitly</text>
+   </g>
+   <g id="text_16">
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(1017.150781 371.105688)">Binary incidence matrix H</text>
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(1001.058203 389.468594)">B × N vertices × N hyperedges</text>
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(1016.090469 407.8315)">One hyperedge per center</text>
+   </g>
+   <g id="text_17">
+    <text style="fill: #63758a; font: 11.5px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="465.441133" transform="rotate(-0, 61.2, 465.441133)">Each hyperedge contains its center plus up to 8 neighbors (9 members when N ≥ 9). Columns of H are hyperedges, not adjacency columns.</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #63758a; font: 11.5px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="497.841133" transform="rotate(-0, 61.2, 497.841133)">Hard top-k construction runs without gradients. Node features X retain gradients through the subsequent HG propagation path.</text>
+   </g>
+   <g id="text_19">
+    <text style="fill: #63758a; font: 11.5px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="530.241133" transform="rotate(-0, 61.2, 530.241133)">The distance coefficient 0.7 is fixed by configuration. The topology depends on the current sample; it is not a trainable soft assignment.</text>
+   </g>
+   <g id="text_20">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'; text-anchor: start" x="45.36" y="595.911563" transform="rotate(-0, 45.36, 595.911563)">C   HGConv and restoration of the hypergraph increment</text>
+   </g>
+   <g id="text_21">
+    <text style="fill: #348995; font: 700 13px 'Microsoft YaHei'; text-anchor: middle" x="277.2" y="638.588594" transform="rotate(-0, 277.2, 638.588594)">Degree-normalized propagation (W = I)</text>
+   </g>
+   <g id="text_22">
+    <!-- $\overline{X}=D_v^{-1/2}HD_e^{-1}H^{\mathsf{T}}D_v^{-1/2}X$ -->
+    <g style="fill: #203047" transform="translate(166.62 675.435)">
+     <text>
+      <tspan style="font: oblique 19px 'DejaVu Sans'" x="0 36.339355 84.932396 99.219505 135.307223 159.570039 208.163079" y="0.03125 -0.45374999999999943 -0.45374999999999943 -0.45374999999999943 -0.45374999999999943 -0.45374999999999943 -0.45374999999999943">XDHDHDX</tspan>
+      <tspan style="font: 19px 'DejaVu Sans'" x="16.717773" y="-0.45374999999999943">=</tspan>
+      <tspan style="font: 13.3px 'DejaVu Sans'" x="52.301732 63.445677 71.907542 75.950999 115.181882 126.325827 150.926338 175.532415 186.676361 195.138226 199.181683" y="-7.727187499999999 -7.727187499999999 -7.727187499999999 -7.727187499999999 -7.727187499999998 -7.727187499999998 -7.727187499999999 -7.727187499999999 -7.727187499999999 -7.727187499999999 -7.727187499999999">−1/2−1T−1/2</tspan>
+      <tspan style="font: oblique 13.3px 'DejaVu Sans'" x="50.969727 113.849876 174.20041" y="4.741562500000001">vev</tspan>
+     </text>
+     <rect x="0" y="-17.625" width="13.016113" height="1.1875"/>
+    </g>
+   </g>
+   <g id="text_23">
+    <text style="fill: #63758a; font: 11px 'Microsoft YaHei'; text-anchor: middle" x="277.2" y="705.81375" transform="rotate(-0, 277.2, 705.81375)">Inputs: differentiable X and detached incidence H</text>
+   </g>
+   <g id="text_24">
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(570.235312 654.128656)">Linear(Ch → Ch)</text>
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(605.638984 672.428594)">GELU</text>
+    <text style="fill: #203047; font: 700 13px 'Microsoft YaHei'" transform="translate(564.800703 690.728531)">× learned scalar γ</text>
+   </g>
+   <g id="text_25">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(838.220625 655.263375)">Reshape to region grid</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(835.780312 672.21375)">Bilinear resize to H × W</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(827.766562 689.106)">Conv 1×1: Ch → C, no bias</text>
+   </g>
+   <g id="text_26">
+    <text style="fill: #203047; font: 700 14px 'Microsoft YaHei'" transform="translate(1167.053906 662.84775)">Δhg only</text>
+    <text style="fill: #203047; font: 700 14px 'Microsoft YaHei'" transform="translate(1147.525 682.623188)">B × C × H × W</text>
+   </g>
+   <g id="text_27">
+    <text style="fill: #63758a; font: 11.5px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="762.081133" transform="rotate(-0, 61.2, 762.081133)">Dv: vertex degrees (row sums of H). De: hyperedge degrees (column sums of H). Degree denominators use eps = 1e-6.</text>
+   </g>
+   <g id="text_28">
+    <text style="fill: #63758a; font: 11.5px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="790.81375" transform="rotate(-0, 61.2, 790.81375)">Pooling, distances, propagation, HG Linear and γ scaling run in FP32. H and its transpose are used without materializing dense G.</text>
+   </g>
+   <g id="text_29">
+    <text style="fill: #63758a; font: 11.5px 'Microsoft YaHei'; text-anchor: start" x="61.2" y="818.89375" transform="rotate(-0, 61.2, 818.89375)">γ starts at 0; the restoration projection has no bias. No node identity X is added to γ·HGConv(X).</text>
+   </g>
+   <g id="text_30">
+    <text style="fill: #203047; font: 700 15px 'Microsoft YaHei'; text-anchor: start" x="46.8" y="876.050859" transform="rotate(-0, 46.8, 876.050859)">Baseline placement (code execution order)</text>
+   </g>
+   <g id="text_31">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(163.575938 913.578563)">decoder1 · RHDB</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(177.627187 930.470812)">H/32, C=768</text>
+   </g>
+   <g id="text_32">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(465.975937 913.578563)">decoder2 · RHDB</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(480.027187 930.470812)">H/16, C=384</text>
+   </g>
+   <g id="text_33">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(754.745625 913.578563)">decoder3 · ResNet ×3</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(786.1275 930.470812)">H/8, C=192</text>
+   </g>
+   <g id="text_34">
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(1057.145625 913.578563)">decoder4 · ResNet ×3</text>
+    <text style="fill: #203047; font: 700 12px 'Microsoft YaHei'" transform="translate(1092.227813 930.470812)">H/4, C=96</text>
+   </g>
+   <g id="text_35">
+    <text style="fill: #63758a; font: 10.5px 'Microsoft YaHei'; text-anchor: start" x="46.8" y="969.882773" transform="rotate(-0, 46.8, 969.882773)">Diagram follows the gate / increment baseline. Stage channels and 64-channel HG projections come from the current 2-stage RHDB configuration.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pd6fbd3df16">
+   <rect x="0" y="0" width="1368" height="986.4"/>
+  </clipPath>
+ </defs>
+</svg>

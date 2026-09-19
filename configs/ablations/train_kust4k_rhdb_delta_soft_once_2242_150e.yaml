@@ -1,0 +1,164 @@
+# Increment-only RHDB (single outer identity). CCCC soft-once + AS6 2242 + MLFM + deep RHDB / shallow ResNet, 150 epochs.
+seed: 42
+log_dir: /data/BUAS/HJK/ACMMamba/logs/ablations/kust4k/decoder/rhdb_delta_soft_once_2242_150e
+checkpoint_dir: /data/BUAS/HJK/ACMMamba/checkpoints/ablations/kust4k/decoder/rhdb_delta_soft_once_2242_150e
+checkpoint_prefix: kust4k_rhdb_delta_soft_once_2242_150e
+class_names:
+- background
+- road
+- building
+- motorcycle
+- car
+- truck
+- tree
+- person
+- traffic_facility
+visualization:
+  modality_a_name: RGB
+  modality_b_name: TIR
+  class_colors:
+  - - 190
+    - 190
+    - 190
+  - - 128
+    - 64
+    - 128
+  - - 220
+    - 30
+    - 30
+  - - 255
+    - 140
+    - 0
+  - - 30
+    - 100
+    - 230
+  - - 120
+    - 70
+    - 20
+  - - 0
+    - 160
+    - 0
+  - - 255
+    - 105
+    - 180
+  - - 0
+    - 190
+    - 190
+  ignore_color:
+  - 255
+  - 255
+  - 255
+data:
+  rgb_dir: /data/BUAS/HJK/ACMMamba/data/RS-RGB-T/RGB
+  sar_dir: /data/BUAS/HJK/ACMMamba/data/RS-RGB-T/TIR
+  label_dir: /data/BUAS/HJK/ACMMamba/data/RS-RGB-T/Seg_annos
+  split_dir: /data/BUAS/HJK/ACMMamba/data/RS-RGB-T
+  rgb_mean:
+  - 0.34845159237174084
+  - 0.3506141143473127
+  - 0.3331212570523176
+  rgb_std:
+  - 0.26706172778534665
+  - 0.2620220358559392
+  - 0.25944587467382035
+  sar_mean:
+  - 0.7006007038644025
+  - 0.3133111298651863
+  - 0.3568898164163959
+  sar_std:
+  - 0.24669422953146866
+  - 0.24661116923694262
+  - 0.20312076994512102
+  modality_b_channels: 3
+  train_horizontal_flip_probability: 0.5
+  train_vertical_flip_probability: 0.0
+  train_random_90_rotation: false
+  batch_size: 1
+  val_batch_size: 1
+  num_workers: 8
+  prefetch_factor: 2
+model:
+  in_channels_a: 3
+  in_channels_b: 3
+  num_classes: 9
+  dims:
+  - 96
+  - 192
+  - 384
+  - 768
+  depths:
+  - 2
+  - 2
+  - 4
+  - 2
+  d_state: 16
+  as6_expand: 1.0
+  history_offsets:
+  - 1
+  - 4
+  - 16
+  - 64
+  mlp_ratio: 4.0
+  dropout: 0.0
+  decoder_dropout: 0.1
+  decoder_blocks_per_stage: 3
+  decoder_type: rhdb
+  rhdb_options:
+    hypergraph_stages: [1, 2]  # project numbering: deepest two stages
+    use_hypergraph: true
+    fusion_mode: gate
+    k: 8
+    node_grid: 16
+    alpha: 0.7
+    hypergraph_hidden_dim: 64
+    gamma_init: 0.0
+    eps: 1.0e-6
+    num_residual_blocks: 1
+    dropout: 0.0
+  drop_path_rate: 0.2
+  scan_backend: null
+  cross_frequency: once_per_stage
+  cross_mode: soft
+  soft_cross_init: 0.5
+  fusion_mode: mlfm
+  stage_modes:
+  - cross
+  - cross
+  - cross
+  - cross
+loss:
+  num_classes: 9
+  ignore_index: 255
+  use_dataset_class_weights: true
+  class_frequencies:
+  - 0.2549875765
+  - 0.5567519133
+  - 0.0319529649
+  - 0.0016459104
+  - 0.0134826942
+  - 0.0144997104
+  - 0.1239014366
+  - 0.0001622832
+  - 0.0026155104
+  class_weight_power: 0.5
+  ce_coefficient: 1.0
+  dice_coefficient: 1.0
+  label_smoothing: 0.0
+optimizer:
+  learning_rate: 6.0e-05
+  weight_decay: 0.01
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+train:
+  epochs: 150
+  accumulation_steps: 4
+  amp: true
+  max_grad_norm: 1.0
+  warmup_epochs: 5
+  poly_power: 0.9
+  val_interval: 10
+  log_interval: 20
+  cudnn_benchmark: true
+  resume: null

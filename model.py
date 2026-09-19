@@ -30,6 +30,17 @@ class DualModalMambaUNet(nn.Module):
         decoder_blocks_per_stage: int = 3,
         drop_path_rate: float = 0.2,
         scan_backend: str | None = None,
+        fusion_mode: str = "mlfm",
+        stage_modes: Sequence[str] = ("self", "cross", "self", "cross"),
+        decoder_type: str = "unet",
+        cross_mode: str = "hard",
+        soft_cross_init: float = 0.5,
+        cross_frequency: str = "every_block",
+        rhdb_options: dict | None = None,
+        mscan_options: dict | None = None,
+        upsample_mode: str = "bilinear",
+        sapa_options: dict | None = None,
+        mlfm_hg_options: dict | None = None,
     ) -> None:
         super().__init__()
         self.num_classes = num_classes
@@ -45,12 +56,23 @@ class DualModalMambaUNet(nn.Module):
             dropout=dropout,
             drop_path_rate=drop_path_rate,
             scan_backend=scan_backend,
+            fusion_mode=fusion_mode,
+            stage_modes=stage_modes,
+            cross_mode=cross_mode,
+            soft_cross_init=soft_cross_init,
+            cross_frequency=cross_frequency,
+            mlfm_hg_options=mlfm_hg_options,
         )
         self.decoder = UNetDecoder(
             encoder_channels=dims,
             num_classes=num_classes,
             dropout=decoder_dropout,
             blocks_per_stage=decoder_blocks_per_stage,
+            decoder_type=decoder_type,
+            rhdb_options=rhdb_options,
+            mscan_options=mscan_options,
+            upsample_mode=upsample_mode,
+            sapa_options=sapa_options,
         )
 
     def forward(

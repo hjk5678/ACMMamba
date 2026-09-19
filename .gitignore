@@ -17,6 +17,9 @@ env/
 .DS_Store
 Thumbs.db
 
+# Temporary local artifacts
+/tmp/
+
 # Training outputs and model artifacts
 checkpoints/
 logs/
@@ -31,4 +34,3 @@ wandb/
 .env
 .env.*
 !.env.example
-

@@ -23,6 +23,7 @@ from data import PairedRemoteSensingDataset
 from losses import build_segmentation_loss
 from metrics import SegmentationConfusionMatrix
 from model import DualModalMambaUNet
+from utils.numerics import require_finite
 
 
 LOGGER = logging.getLogger("ACMMamba.infer")
@@ -177,6 +178,7 @@ def load_model(
         state_dict = {str(key)[7:]: value for key, value in state_dict.items()}
 
     model = DualModalMambaUNet(**config["model"])
+    require_finite(state_dict.items(), "invalid inference checkpoint", torch.device("cpu"))
     model.load_state_dict(state_dict, strict=True)
     model.to(device).eval()
     return model, checkpoint
@@ -506,6 +508,8 @@ def main() -> None:
             rgb = rgb_cpu.to(device, non_blocking=True)
             sar = sar_cpu.to(device, non_blocking=True)
             target = target_cpu.to(device, non_blocking=True)
+            context = f"inference ids={sample_ids}"
+            require_finite([("input_A", rgb), ("input_B", sar)], context, device)
 
             if device.type == "cuda":
                 torch.cuda.synchronize(device)
@@ -516,6 +520,7 @@ def main() -> None:
                 enabled=amp_enabled,
             ):
                 logits = model(rgb, sar)
+            require_finite([("logits", logits)], context, device)
             if device.type == "cuda":
                 torch.cuda.synchronize(device)
             inference_seconds += time.perf_counter() - start_time
@@ -529,6 +534,7 @@ def main() -> None:
                 enabled=amp_enabled,
             ):
                 components = criterion(logits, target, return_components=True)
+            require_finite(components.items(), context, device)
             prediction = logits.argmax(dim=1)
             metrics.update(prediction, target)
             current_batch_size = rgb.shape[0]

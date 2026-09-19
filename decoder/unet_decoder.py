@@ -8,6 +8,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from .sapa import build_skip_upsampler
+
 
 def _group_count(channels: int, maximum: int = 32) -> int:
     for groups in range(min(maximum, channels), 0, -1):
@@ -101,18 +103,27 @@ class UpBlock(nn.Module):
         out_channels: int,
         dropout: float = 0.0,
         num_residual_blocks: int = 3,
+        mscan_options: dict | None = None,
+        upsample_mode: str = "bilinear",
+        sapa_options: dict | None = None,
     ) -> None:
         super().__init__()
         self.reduce = nn.Conv2d(in_channels, out_channels, kernel_size=1)
-        self.refine = ResidualStage(
-            out_channels + skip_channels,
-            out_channels,
-            num_blocks=num_residual_blocks,
-            dropout=dropout,
-        )
+        if mscan_options is None:
+            self.refine = ResidualStage(
+                out_channels + skip_channels,
+                out_channels,
+                num_blocks=num_residual_blocks,
+                dropout=dropout,
+            )
+        else:
+            from .mscan import MSCANStage
+            self.refine = MSCANStage(out_channels + skip_channels, out_channels, **mscan_options)
+        self.sapa = build_skip_upsampler(skip_channels, in_channels, upsample_mode, sapa_options)
 
     def forward(self, x: torch.Tensor, skip: torch.Tensor) -> torch.Tensor:
-        x = F.interpolate(x, size=skip.shape[-2:], mode="bilinear", align_corners=False)
+        x = (F.interpolate(x, size=skip.shape[-2:], mode="bilinear", align_corners=False)
+             if self.sapa is None else self.sapa(encoder_feature=skip, decoder_feature=x))
         x = self.reduce(x)
         return self.refine(torch.cat((x, skip), dim=1))
 
@@ -130,10 +141,29 @@ class UNetDecoder(nn.Module):
         num_classes: int = 5,
         dropout: float = 0.1,
         blocks_per_stage: int = 3,
+        decoder_type: str = "unet",
+        rhdb_options: dict | None = None,
+        mscan_options: dict | None = None,
+        upsample_mode: str = "bilinear",
+        sapa_options: dict | None = None,
     ) -> None:
         super().__init__()
         if len(encoder_channels) != 4:
             raise ValueError("U-Net decoder expects exactly four encoder scales.")
+        self.decoder_type = decoder_type.lower().strip()
+        if self.decoder_type not in {"unet", "rhdb"}:
+            raise ValueError("decoder_type must be 'unet' or 'rhdb'")
+        if self.decoder_type != "rhdb" and rhdb_options:
+            raise ValueError("rhdb_options requires decoder_type='rhdb'")
+        if mscan_options is not None:
+            if self.decoder_type != "rhdb" or not isinstance(mscan_options, dict):
+                raise ValueError("mscan_options must be a dict and requires decoder_type='rhdb'.")
+            allowed = {"depth", "mlp_ratio", "drop", "drop_path", "layer_scale_init_value"}
+            if set(mscan_options) - allowed:
+                raise ValueError(f"Unknown MSCAN options: {sorted(set(mscan_options) - allowed)}")
+        self.mscan_stages = (3, 4) if mscan_options is not None else ()
+        self.upsample_mode = upsample_mode
+        upsample_options = dict(upsample_mode=upsample_mode, sapa_options=sapa_options)
         c1, c2, c3, c4 = (int(channels) for channels in encoder_channels)
         # S4 is retained as a skip. A separate downsampled representation S4'
         # enters Decoder1, giving four decoder stages symmetric to the encoder.
@@ -143,14 +173,45 @@ class UNetDecoder(nn.Module):
             nn.GELU(),
             ConvBlock(c4, c4, dropout),
         )
-        self.decoder1 = UpBlock(c4, c4, c4, dropout, blocks_per_stage)
-        self.decoder2 = UpBlock(c4, c3, c3, dropout, blocks_per_stage)
-        self.decoder3 = UpBlock(c3, c2, c2, dropout, blocks_per_stage)
-        self.decoder4 = UpBlock(c2, c1, c1, dropout, blocks_per_stage)
+        if self.decoder_type == "rhdb":
+            from .rhdb import RHDBBlock
+
+            options = dict(rhdb_options or {})
+            # Project numbering is deep-to-shallow: decoder1(S4), decoder2(S3).
+            stages = tuple(options.pop("hypergraph_stages", (1, 2)))
+            if len(set(stages)) != len(stages) or any(
+                not isinstance(index, int) or isinstance(index, bool) or index not in (1, 2, 3, 4)
+                for index in stages
+            ):
+                raise ValueError("hypergraph_stages must contain unique indices in [1,4] (deep first).")
+            self.hypergraph_stages = stages
+            if mscan_options is not None and set(stages) != {1, 2}:
+                raise ValueError("Shallow MSCAN requires RHDB stages [1,2]; stages 3,4 must remain UpBlocks.")
+            for index, (deep, skip) in enumerate(((c4, c4), (c4, c3), (c3, c2), (c2, c1)), 1):
+                block = RHDBBlock(skip, deep, skip, **options, **upsample_options) if index in stages else UpBlock(
+                    deep, skip, skip, dropout, blocks_per_stage,
+                    mscan_options=mscan_options if index in self.mscan_stages else None,
+                    **upsample_options,
+                )
+                setattr(self, f"decoder{index}", block)
+        else:
+            self.decoder1 = UpBlock(c4, c4, c4, dropout, blocks_per_stage, **upsample_options)
+            self.decoder2 = UpBlock(c4, c3, c3, dropout, blocks_per_stage, **upsample_options)
+            self.decoder3 = UpBlock(c3, c2, c2, dropout, blocks_per_stage, **upsample_options)
+            self.decoder4 = UpBlock(c2, c1, c1, dropout, blocks_per_stage, **upsample_options)
         self.segmentation_head = nn.Sequential(
             ConvBlock(c1, c1, dropout=0.0),
             nn.Conv2d(c1, num_classes, kernel_size=1),
         )
+
+    def hypergraph_gammas(self) -> Dict[str, float]:
+        """Learned HG residual strengths; empty for legacy/disabled branches."""
+        return {
+            f"decoder{index}": float(stage.hypergraph_branch.gamma.detach().cpu())
+            for index in range(1, 5)
+            for stage in [getattr(self, f"decoder{index}")]
+            if hasattr(stage, "hypergraph_branch")
+        }
 
     def forward(
         self,

@@ -1,0 +1,97 @@
+seed: 42
+log_dir: /data/BUAS/HJK/ACMMamba/logs/ablations/korea_no_cloud/encoder/cccc
+checkpoint_dir: /data/BUAS/HJK/ACMMamba/checkpoints/ablations/korea_no_cloud/encoder/cccc
+checkpoint_prefix: korea_no_cloud_encoder_cccc
+class_names:
+- farmland
+- greenery
+- road
+- building
+- water
+data:
+  rgb_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/korea/no_cloud/GF2
+  sar_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/korea/no_cloud/GF3
+  label_dir: /data/BUAS/HJK/ACMMamba/data/DDHRNet/korea/no_cloud/label
+  split_dir: /data/BUAS/HJK/ACMMamba/data/splits_korea_no_cloud
+  rgb_mean:
+  - 0.2159441901655654
+  - 0.2287565200278445
+  - 0.2475418492356307
+  rgb_std:
+  - 0.14726560529342825
+  - 0.13568536676593906
+  - 0.1228726862728509
+  sar_mean:
+  - 0.19897191111648374
+  sar_std:
+  - 0.1946189513678449
+  batch_size: 1
+  val_batch_size: 1
+  num_workers: 8
+  prefetch_factor: 2
+model:
+  in_channels_a: 3
+  in_channels_b: 1
+  num_classes: 5
+  dims:
+  - 96
+  - 192
+  - 384
+  - 768
+  depths:
+  - 1
+  - 1
+  - 1
+  - 1
+  d_state: 16
+  as6_expand: 1.0
+  history_offsets:
+  - 1
+  - 4
+  - 16
+  - 64
+  mlp_ratio: 4.0
+  dropout: 0.0
+  decoder_dropout: 0.1
+  decoder_blocks_per_stage: 3
+  decoder_type: unet
+  drop_path_rate: 0.2
+  scan_backend: null
+  fusion_mode: mlfm
+  stage_modes:
+  - cross
+  - cross
+  - cross
+  - cross
+loss:
+  num_classes: 5
+  ignore_index: 255
+  use_dataset_class_weights: true
+  class_frequencies:
+  - 0.4445805255
+  - 0.0523776735
+  - 0.2376734747
+  - 0.1417693564
+  - 0.12359897
+  class_weight_power: 0.5
+  ce_coefficient: 1.0
+  dice_coefficient: 1.0
+  label_smoothing: 0.0
+optimizer:
+  learning_rate: 6.0e-05
+  weight_decay: 0.01
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+train:
+  epochs: 100
+  accumulation_steps: 4
+  amp: true
+  max_grad_norm: 1.0
+  warmup_epochs: 5
+  poly_power: 0.9
+  val_interval: 10
+  log_interval: 20
+  cudnn_benchmark: true
+  resume: null

@@ -26,6 +26,8 @@ class SegmentationConfusionMatrix:
     @torch.no_grad()
     def update(self, logits_or_prediction: torch.Tensor, target: torch.Tensor) -> None:
         if logits_or_prediction.ndim == 4:
+            if not torch.isfinite(logits_or_prediction).all():
+                raise FloatingPointError("Non-finite logits: refusing argmax/segmentation metrics")
             prediction = logits_or_prediction.argmax(dim=1)
         elif logits_or_prediction.ndim == 3:
             prediction = logits_or_prediction
